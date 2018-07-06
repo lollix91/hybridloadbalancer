@@ -1,0 +1,20 @@
+dentro il client abbiamo il nostro client, che deve avere la libreria jquery e la nostra libreria 
+
+dentro library abbiamo la nostra libreria e il file di configurazione che è all'interno della libreria stessa
+
+dentro instancesM1 abbiamo le instanze di M1 che possono essere inserite su qualsiasi server a qualsiasi indirizzo vogliamo (?) e il discovery?
+
+dentro serverT1 e serverT2 abbiamo la cartella easyservice (e/o altre), dentro ogni cartella avremo il codice del nostro "framework" che avrà il 
+service discovery e tutte le varie funzioni di redirect che consentono un balancing lato server.
+abbiamo anche la cartella health che dovrebbe contenere o il workload medio oppure qualcosa di piu semplice, tipo OK o NO, per indicare lo stato
+di salute del server.
+
+spiegazione:
+il nostro client, tramite jquery, andrà ad intercettare tutte le richieste fatte a quel determinato server (oppure avremo un alias che ci consentirà di
+capire quale servizio stiamo invocando, oppure una semplice funzione jquery callBalancedService("easyservice"), ottimo!), che verranno girate ad uno dei server
+indicati nel nostro file di config (alternati usando un algoritmo oppure, tramite healthcheck, vedere il più scarico).
+la richiesta verrà inoltrata successivamente dal server ad uno dei microservizi presenti in instancesM1, quindi microM1, 2,3, la scelta viene fatta tramite
+algoritmo che vede il più scarico oppure tramite roundROBIN utilizzando il sessionID, meglio.
+appena abbiamo la risposta, possiamo rigirarla al client ed il gioco è fatto.
+
+capire cosa è e come funziona il service discovery, serve farlo per questo prototipo? NO.
