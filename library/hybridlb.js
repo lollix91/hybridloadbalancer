@@ -27,11 +27,13 @@
 	
 	*/
 	
+	
 	//when loading the page, call the health check always to be sure which service is the freest
+	//i'll do it each 1 minute?
 	$(document).ready(function() {
 		
 		$.doHealthCheck();
-		
+	
 	});
 
 
@@ -39,16 +41,23 @@
 	(function ($) {
 		$.getLoadBalanced = function () {
 
-			//implement load balancing algorithm (round robin or health check), better call directly and the health check made before or after
-			//better after, because now i know in which service i'm interested so i can call healthcheck and, in case false, remove temporary
-			//the server from settings
 			
-			//and name matching with serviceName and add the operation in the end function(serviceName, operation, params?)
+			//add name matching with serviceName and add the operation in the end function(serviceName, operation, params?)
 			//but not needed for initial state
-			$.get(multiService[0].urls[0].baseUrl+"/"+multiService[0].serviceName+"/"+"text", function(data, status){			
+			var indexToBeCalled = 0;
+			var max = 0;
+			for(var i=0; i<multiService[0].urls.length; i++) {
+				if(multiService[0].urls[i].score >= max) {
+					indexToBeCalled = i;
+					max = multiService[0].urls[i].score;
+				}
+			}
+			
+			$.get(multiService[0].urls[indexToBeCalled].baseUrl+"/"+multiService[0].serviceName+"/"+"text", function(data, status){			
 				if(status == "success") {
 					var values = jQuery.parseJSON(data);
-					alert(data);
+					//REMOVE this line
+					$("#scores").html($("#scores").html()+"DONE!<br>");
 				}
 			});
 		}
@@ -63,6 +72,8 @@
 				$.doExternalLoadHealth(multiService[0].urls[i].healthCheckUrl, i, multiService[0].serviceName);
 			}
 		}
+		
+		
 	})(jQuery);
 	
 	
@@ -92,11 +103,20 @@
 					
 					var loadScore = multiService[0].urls[iValue].requestLast10MinuteLoad / multiService[0].urls[iValue].requestLast1MinuteLoad;
 					
+					if(reqScore == Infinity)
+						reqScore = 1000;
+					if(loadScore == Infinity)
+						loadScore = 1000;
+					
 					var score = reqScore + loadScore;
 					
 					multiService[0].urls[iValue].requestScore = reqScore;
 					multiService[0].urls[iValue].loadScore = loadScore;
 					multiService[0].urls[iValue].score = score;
+					
+					//REMOVE those lines		
+					$("#scores").html($("#scores").html()+"serverT"+(iValue+1)+"<br>reqScore:"+reqScore+"<br>loadScore:"+loadScore+"<br>score:"+score+"<br>");
+								
 					
 				}
 			});

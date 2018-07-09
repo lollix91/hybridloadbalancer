@@ -16,6 +16,10 @@
 
 <form>
 <input type="button" id="submitapi" value="Send Data"></input>
+
+<div id="scores">
+</div>
+
 </form>
 
 
