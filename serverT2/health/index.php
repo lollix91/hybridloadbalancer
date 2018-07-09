@@ -55,9 +55,9 @@ if($only1minute['count'] == null)
 	$only1minute['count'] = 0;
 if($only1minute['meanload'] == null)
 	$only1minute['meanload'] = 0;
-if($only1minute['count'] == null)
+if($only10minute['count'] == null)
 	$only10minute['count'] = 0;
-if($only1minute['meanload'] == null)
+if($only10minute['meanload'] == null)
 	$only10minute['meanload'] = 0;
 
 
