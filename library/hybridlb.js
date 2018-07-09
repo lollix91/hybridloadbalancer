@@ -27,7 +27,12 @@
 	
 	*/
 	
-
+	//when loading the page, call the health check always to be sure which service is the freest
+	$(document).ready(function() {
+		
+		$.doHealthCheck();
+		
+	});
 
 
 
@@ -39,6 +44,7 @@
 			//the server from settings
 			
 			//and name matching with serviceName and add the operation in the end function(serviceName, operation, params?)
+			//but not needed for initial state
 			$.get(multiService[0].urls[0].baseUrl+"/"+multiService[0].serviceName+"/"+"text", function(data, status){			
 				if(status == "success") {
 					var values = jQuery.parseJSON(data);
@@ -47,6 +53,22 @@
 			});
 		}
 	})(jQuery);
+	
+	(function ($) {
+		$.doHealthCheck = function () {
+
+			//the healthcheck contains health parameters, server response time, data that with an algorithm can be used to improve the system
+			for(var i=0; i<multiService[0].urls.length; i++) {
+				$.get(multiService[0].urls[i].healthCheckUrl, function(data, status){			
+					if(status == "success") {
+						var values = jQuery.parseJSON(data);
+						alert(data);
+					}
+				});
+			}
+		}
+	})(jQuery);
+	
 	
 	
 	
