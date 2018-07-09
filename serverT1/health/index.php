@@ -44,28 +44,34 @@ $dbname = "serverT1";
 $db = mysql_connect($hostname, $username, $password) or die("Unable to connect to MySQL");
 mysql_select_db($dbname);
 
-
-$query = mysql_query("SELECT COUNT(*) as count, AVG(serverload) as meanload FROM health WHERE datetime >= NOW() - INTERVAL 1 MINUTE");
+//in the future the servicename will be passed using GET
+$query = mysql_query("SELECT COUNT(*) as count FROM easyservice WHERE datetime >= NOW() - INTERVAL 1 MINUTE");
 $only1minute = mysql_fetch_array($query);
 
-$query = mysql_query("SELECT COUNT(*) as count, AVG(serverload) as meanload FROM health WHERE datetime >= NOW() - INTERVAL 10 MINUTE");
+$query = mysql_query("SELECT COUNT(*) as count FROM easyservice WHERE datetime >= NOW() - INTERVAL 10 MINUTE");
 $only10minute = mysql_fetch_array($query);
+
+$query = mysql_query("SELECT AVG(serverload) as meanload FROM health WHERE datetime >= NOW() - INTERVAL 1 MINUTE");
+$only1minuteload = mysql_fetch_array($query);
+
+$query = mysql_query("SELECT AVG(serverload) as meanload FROM health WHERE datetime >= NOW() - INTERVAL 10 MINUTE");
+$only10minuteload = mysql_fetch_array($query);
 
 if($only1minute['count'] == null)
 	$only1minute['count'] = 0;
-if($only1minute['meanload'] == null)
-	$only1minute['meanload'] = 0;
+if($only1minuteload['meanload'] == null)
+	$only1minuteload['meanload'] = 0;
 if($only10minute['count'] == null)
 	$only10minute['count'] = 0;
-if($only10minute['meanload'] == null)
-	$only10minute['meanload'] = 0;
+if($only10minuteload['meanload'] == null)
+	$only10minuteload['meanload'] = 0;
 
 
 $fullhealth = new stdClass();
 $fullhealth->last_minute = $only1minute['count'];
 $fullhealth->last_ten_minutes = $only10minute['count'];
-$fullhealth->server_load_last_minute = $only1minute['meanload'];
-$fullhealth->server_load_last_ten_minutes = $only10minute['meanload'];
+$fullhealth->server_load_last_minute = $only1minuteload['meanload'];
+$fullhealth->server_load_last_ten_minutes = $only10minuteload['meanload'];
 
 
 echo(json_encode($fullhealth));
