@@ -68,10 +68,10 @@ if($only10minuteload['meanload'] == null)
 
 
 $fullhealth = new stdClass();
-$fullhealth->last_minute = $only1minute['count'];
-$fullhealth->last_ten_minutes = $only10minute['count'];
-$fullhealth->server_load_last_minute = $only1minuteload['meanload'];
-$fullhealth->server_load_last_ten_minutes = $only10minuteload['meanload'];
+$fullhealth->last_minute = intval($only1minute['count']);
+$fullhealth->last_ten_minutes = intval($only10minute['count']);
+$fullhealth->server_load_last_minute = floatval($only1minuteload['meanload']);
+$fullhealth->server_load_last_ten_minutes = floatval($only10minuteload['meanload']);
 
 
 echo(json_encode($fullhealth));

@@ -83,13 +83,16 @@
 					//naturally it can be changed the algorithm here above
 					
 					//if the number is 1 the server is stable, if is <1 the number of requests is increasing, else is decreasing
-					reqScore = multiService[0].urls[iValue].requestLast10Minute / 10; 
-					reqScore = reqScore / multiService[0].urls[iValue].requestLast1Minute;
-					loadScore = multiService[0].urls[iValue].requestLast10MinuteLoad / multiService[0].urls[iValue].requestLast1MinuteLoad;
+					var reqScore = multiService[0].urls[iValue].requestLast10Minute / 10; 
 					
-					score = (reqScore + loadScore) / 2;
-
-					alert(score+"score");
+					if(reqScore == 0 && multiService[0].urls[iValue].requestLast1Minute == 0)
+						reqScore = Infinity;
+					else
+						reqScore = reqScore / multiService[0].urls[iValue].requestLast1Minute;
+					
+					var loadScore = multiService[0].urls[iValue].requestLast10MinuteLoad / multiService[0].urls[iValue].requestLast1MinuteLoad;
+					
+					var score = reqScore + loadScore;
 					
 					multiService[0].urls[iValue].requestScore = reqScore;
 					multiService[0].urls[iValue].loadScore = loadScore;
