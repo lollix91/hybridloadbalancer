@@ -90,10 +90,10 @@
 					multiService[0].urls[iValue].requestLast1MinuteLoad = values['server_load_last_minute'];
 					multiService[0].urls[iValue].requestLast10MinuteLoad = values['server_load_last_ten_minutes'];
 		
-					//the score from 0 to other, infinity is perfect, 0 is worse
+					//the score from 0 to other, infinity is perfect, 0 is worse!
 					//naturally it can be changed the algorithm here above
 					
-					//if the number is 1 the server is stable, if is <1 the number of requests is increasing, else is decreasing
+					
 					var reqScore = multiService[0].urls[iValue].requestLast10Minute / 10; 
 					
 					if(reqScore == 0 && multiService[0].urls[iValue].requestLast1Minute == 0)
@@ -104,9 +104,9 @@
 					var loadScore = multiService[0].urls[iValue].requestLast10MinuteLoad / multiService[0].urls[iValue].requestLast1MinuteLoad;
 					
 					if(reqScore == Infinity)
-						reqScore = 1000;
+						reqScore = 10000;
 					if(loadScore == Infinity)
-						loadScore = 1000;
+						loadScore = 10000;
 					
 					var score = reqScore + loadScore;
 					

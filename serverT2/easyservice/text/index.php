@@ -43,28 +43,43 @@ mysql_select_db($dbname);
 $ip = $_SERVER['REMOTE_ADDR'];
 $sessionid = session_id();
 
-$query = mysql_query("SELECT * FROM easyservice WHERE sessionid = '".$sessionid."' AND ip = '".$ip."' ORDER BY id DESC LIMIT 1") or die("Error in query");
-$row = mysql_fetch_array($query);
+$callableids = array();
+$cc = 0;
+
+$query=mysql_query("SELECT idcalled, COUNT(idcalled) as count FROM easyservice WHERE datetime >= NOW() - INTERVAL 10 MINUTE GROUP BY idcalled ") or die("Error in query");
+while($row = mysql_fetch_array($query)) {
+	$callableids[$cc]['idcalled'] = $row['idcalled'];
+	$callableids[$cc]['counter'] = $row['count'];
+	$cc++;
+}
 
 $idcalled = 0;
+$maxvalue = -1;
 
-if(!isset($row['id'])) {//is the first time visiting the service or is passed a lot of time
-	$idcalled = rand(0, count($easyservice->service_urls)-1);//random, is the best choice for the first time
+$maxidcalled = count($easyservice->service_urls);
 
-	mysql_query("INSERT INTO easyservice(sessionid, ip, idcalled) VALUES('".$sessionid."', '".$ip."', '".$idcalled."')");
+for($i = 0; $i<count($callableids); $i++) {
+	if($callableids[$i]['counter']>$maxvalue) {
+		$maxvalue = $callableids[$i]['counter'];
+		$idcalled = $callableids[$i]['idcalled'];		
+	}
 }
-else {//i've already requested the service before, is not passed a lot of time
-	$idcalled = $row["idcalled"];
-	$idcalled = ($idcalled+1)%(count($easyservice->service_urls));//round robin, but is possible to implement own algorithm
-	
-	mysql_query("INSERT INTO easyservice(sessionid, ip, idcalled) VALUES('".$sessionid."', '".$ip."', '".$idcalled."')");
+
+if($maxvalue == -1) {//is the first time that an user in 10 minutes access to a service, pick the first value
+	$idcalled = 0;
 }
+else {
+	$idcalled = ($idcalled+1)%($maxidcalled);
+}
+
+mysql_query("INSERT INTO easyservice(sessionid, ip, idcalled) VALUES('".$sessionid."', '".$ip."', '".$idcalled."')");
 
 
 //now i will send only the request with the content "text", in future this will be changed, for testing purposes is not needed more
 //and will need the CURL, as above. When the CURL will be used, there will be no more the 301 and 302 codes on the browser network inspector
 
 header("location: ".$easyservice->service_urls[$idcalled]."/".$easyservice->service_name."/"."text");
+
 
 /*
 
