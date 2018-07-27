@@ -56,8 +56,6 @@
 			$.get(multiService[0].urls[indexToBeCalled].baseUrl+"/"+multiService[0].serviceName+"/"+"text", function(data, status){			
 				if(status == "success") {
 					var values = jQuery.parseJSON(data);
-					//REMOVE this line
-					//$("#scores").html($("#scores").html()+"DONE!<br>");
 				}
 			});
 		}

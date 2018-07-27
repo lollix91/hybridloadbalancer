@@ -15,7 +15,7 @@
 
 
 <form>
-<input type="button" id="submitapi" value="Send Data"></input>
+<input type="button" id="submitapi" value="DO 500 REQUESTS"></input>
 
 <div id="scores">
 </div>
@@ -42,7 +42,7 @@
 		var datetime = new Date();
 		initialTime = datetime.getTime();
 	
-		for(var i = 0; i<100; i++)
+		for(var i = 0; i<500; i++)
 			$.getLoadBalanced();
 	
 	});
