@@ -57,7 +57,7 @@
 				if(status == "success") {
 					var values = jQuery.parseJSON(data);
 					//REMOVE this line
-					$("#scores").html($("#scores").html()+"DONE!<br>");
+					//$("#scores").html($("#scores").html()+"DONE!<br>");
 				}
 			});
 		}

@@ -26,9 +26,25 @@
 
 <script type="text/javascript" >
 
+	var initialTime = 0;
+	var curit = -2;
+	
+	$.ajaxSetup({
+    complete: function (xhr,settings) {
+		var datetime = new Date();
+		$("#scores").html($("#scores").html()+(curit + " - " + (datetime.getTime()-initialTime)/1000)+"<br>");
+		curit++;
+    }
+	});
 	
 	$("#submitapi").click(function () {		
-		$.getLoadBalanced();
+
+		var datetime = new Date();
+		initialTime = datetime.getTime();
+	
+		for(var i = 0; i<100; i++)
+			$.getLoadBalanced();
+	
 	});
 
 	
