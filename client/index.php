@@ -2,7 +2,7 @@
 <head>
 <title>Client</title>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="../library/jquery.min.js"></script>
 <script src="../library/hybridlb.js"></script>
 
 <style>
@@ -15,7 +15,7 @@
 
 
 <form>
-<input type="button" id="submitapi" value="DO 500 REQUESTS"></input>
+<input type="button" id="submitapi" value="GET REQUEST"></input>
 
 <div id="scores">
 </div>
@@ -42,7 +42,7 @@
 		var datetime = new Date();
 		initialTime = datetime.getTime();
 	
-		for(var i = 0; i<500; i++)
+		//for(var i = 0; i<500; i++)
 			$.getLoadBalanced();
 	
 	});
